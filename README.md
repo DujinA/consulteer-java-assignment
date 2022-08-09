@@ -32,7 +32,19 @@ Simple CRUD Application using Spring Boot + MySQL Database which implements REST
 To start the Spring Boot application, make sure you have a MySQL database java_assignment_apis.sql ready. Default MySQL username is root and password is paswword.
 In the application.properties file, setup the required Enviromental Variables to suit your needs. Applications URL on local is `https://localhost:8080`.
 
-To run the application make sure the your position is in consulteer-java-assignment, and run following command:
+Open terminal and use git clone command to download the remote GitHub repository to your computer:
+
+```
+git clone https://github.com/skarware/spring-boot-blog-app.git
+```
+
+It will create a new folder with same name as GitHub repository "consulteer-java-assignment". All the project files and git data will be cloned into it. After cloning complete change directories into that new folder:
+
+```
+cd spring-boot-blog-app
+```
+
+To launch the application run this command (maven version):
 
 ```
 mvn clean spring-boot:run
