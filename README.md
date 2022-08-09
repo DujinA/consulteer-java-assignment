@@ -16,6 +16,8 @@ You're sections headers will be used to reference location of destination.
 
 Simple CRUD Application using Spring Boot + MySQL Database which implements REST API for Post and Comment management. Project was assigned by Consulteer company.
 
+picture of UML diagram is here: `https://postimg.cc/VrjrW6cT`
+
 #### Technologies
 
 - Java, Spring Boot, Rest API
