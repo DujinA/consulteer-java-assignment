@@ -1,6 +1,7 @@
 package com.consulteer.javaassignment.controllers;
 
 import com.consulteer.javaassignment.dto.PostDTO;
+import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.payloads.ApiResponse;
 import com.consulteer.javaassignment.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,17 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
+    public ResponseEntity<PostDTO> createPost(@Valid @RequestBody Post post) {
 
-        PostDTO createPostDTO = this.postService.createPost(postDTO);
+        PostDTO createPostDTO = this.postService.createPost(post);
 
         return new ResponseEntity<>(createPostDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO, @PathVariable("postId") Long postId) {
+    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody Post post, @PathVariable("postId") Long postId) {
 
-        PostDTO updatedPost = this.postService.updatePost(postDTO, postId);
+        PostDTO updatedPost = this.postService.updatePost(post, postId);
 
         return ResponseEntity.ok(updatedPost);
     }

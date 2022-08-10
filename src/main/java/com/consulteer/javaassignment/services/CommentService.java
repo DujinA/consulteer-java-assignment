@@ -1,14 +1,15 @@
 package com.consulteer.javaassignment.services;
 
 import com.consulteer.javaassignment.dto.CommentDTO;
+import com.consulteer.javaassignment.models.Comment;
 
 import java.util.List;
 
 public interface CommentService {
 
-    CommentDTO createComment(CommentDTO commentDTO, Long postId);
+    CommentDTO createComment(Comment comment, Long postId);
 
-    CommentDTO updateComment(CommentDTO commentDTO, Long commentId);
+    CommentDTO updateComment(Comment comment, Long commentId);
 
     CommentDTO getCommentById(Long CommentId);
 

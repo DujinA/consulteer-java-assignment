@@ -26,9 +26,7 @@ public class PostServiceImpl implements PostService {
     private ModelMapper modelMapper;
 
     @Override
-    public PostDTO createPost(PostDTO postDTO){
-
-        Post post = this.modelMapper.map(postDTO, Post.class);
+    public PostDTO createPost(Post post){
 
         Boolean postExists = this.postRepository.selectedPostExists(post.getId());
 
@@ -47,21 +45,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO updatePost(PostDTO postDTO, Long postId){
+    public PostDTO updatePost(Post post, Long postId){
 
-        Post post = this.postRepository.findById(postId)
+        Post updatedPost = this.postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post", " Id ", postId));
 
-        post.setTitle(postDTO.getTitle());
-        post.setContent(postDTO.getContent());
-        post.setImageName(postDTO.getImageName());
-        post.setLikes(postDTO.getLikes());
-        post.setDislikes(postDTO.getLikes());
-        post.setUpdatedAt(new Date());
+        updatedPost.setTitle(post.getTitle());
+        updatedPost.setContent(post.getContent());
+        updatedPost.setImageName(post.getImageName());
+        updatedPost.setLikes(post.getLikes());
+        updatedPost.setDislikes(post.getLikes());
+        updatedPost.setUpdatedAt(new Date());
 
-        Post updatedPost = this.postRepository.save(post);
+        Post savedPost = this.postRepository.save(updatedPost);
 
-        return this.modelMapper.map(updatedPost, PostDTO.class);
+        return this.modelMapper.map(savedPost, PostDTO.class);
     }
 
     @Override

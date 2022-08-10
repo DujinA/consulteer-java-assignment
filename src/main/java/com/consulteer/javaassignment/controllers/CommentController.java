@@ -1,6 +1,7 @@
 package com.consulteer.javaassignment.controllers;
 
 import com.consulteer.javaassignment.dto.CommentDTO;
+import com.consulteer.javaassignment.models.Comment;
 import com.consulteer.javaassignment.payloads.ApiResponse;
 import com.consulteer.javaassignment.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +20,16 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CommentDTO commentDTO, @PathVariable Long postId) {
+    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody Comment comment, @PathVariable Long postId) {
 
-        CommentDTO createCommentDTO = this.commentService.createComment(commentDTO, postId);
+        CommentDTO createCommentDTO = this.commentService.createComment(comment, postId);
         return new ResponseEntity<CommentDTO>(createCommentDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@Valid @RequestBody CommentDTO commentDTO, @PathVariable("commentId") Long commentId) {
+    public ResponseEntity<CommentDTO> updateComment(@Valid @RequestBody Comment comment, @PathVariable("commentId") Long commentId) {
 
-        CommentDTO updatedComment = this.commentService.updateComment(commentDTO, commentId);
+        CommentDTO updatedComment = this.commentService.updateComment(comment, commentId);
 
         return ResponseEntity.ok(updatedComment);
     }

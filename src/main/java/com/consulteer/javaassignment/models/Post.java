@@ -1,5 +1,6 @@
 package com.consulteer.javaassignment.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,18 +29,17 @@ public class Post {
     @Column(length = 10000, nullable = false)
     private String content;
 
-    private String imageName;
+    private String imageName = "default.png";
 
     private Date createdAt;
 
     private Date updatedAt;
 
-    @Column(nullable = false)
-    private Integer likes;
+    private Integer likes = 0;
 
-    @Column(nullable = false)
-    private Integer dislikes;
+    private Integer dislikes = 0;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();
 
