@@ -1,16 +1,12 @@
 package com.consulteer.javaassignment.repositories;
 
-import com.consulteer.javaassignment.models.Comment;
 import com.consulteer.javaassignment.models.Post;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Date;
-import java.util.HashSet;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class PostRepositoryTest {
@@ -18,11 +14,19 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository underTest;
 
+    @AfterEach
+    void tearDown() {
+        underTest.deleteAll();
+    }
+
     @Test
-    void  itShouldCheckIfPostAlreadyExists() {
+    void itShouldCheckIfPostAlreadyExists() {
+
+        Long id = 1L;
 
         //given
         Post post = new Post(
+                id,
                 "Title",
                 "Content",
                 "default.png",
@@ -35,7 +39,7 @@ class PostRepositoryTest {
 
         underTest.save(post);
         //when
-        Boolean expected = underTest.selectedPostExists(post.getId());
+        Boolean expected = underTest.selectedPostExists(id);
         //then
         assertThat(expected).isTrue();
     }
