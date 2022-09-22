@@ -24,12 +24,11 @@ class PostRepositoryTest {
 
         Long id = 1L;
 
-        //given
+        // given
         Post post = new Post(
                 id,
                 "Title",
                 "Content",
-                "default.png",
                 null,
                 null,
                 0,
@@ -38,20 +37,24 @@ class PostRepositoryTest {
         );
 
         underTest.save(post);
-        //when
-        Boolean expected = underTest.selectedPostExists(id);
-        //then
+
+        // when
+        Boolean expected = underTest.doesSelectedPostExist(id);
+
+        // then
         assertThat(expected).isTrue();
     }
 
     @Test
     void  itShouldCheckIfPostDoesNotExist() {
 
-        //given
+        // given
         Long id = 1L;
-        //when
-        Boolean expected = underTest.selectedPostExists(id);
-        //then
+
+        // when
+        Boolean expected = underTest.doesSelectedPostExist(id);
+
+        // then
         assertThat(expected).isFalse();
     }
 }

@@ -1,10 +1,7 @@
 package com.consulteer.javaassignment.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,33 +17,40 @@ import java.util.Set;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
     private Long id;
 
-    @Column(name = "post_title", length = 100, nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @Column(length = 10000, nullable = false)
-    private String content;
-
-    private String imageName = "default.png";
+    private String body;
 
     private Date createdAt;
 
     private Date updatedAt;
 
+    @Column(nullable = false)
     private Integer likes = 0;
 
+    @Column(nullable = false)
     private Integer dislikes = 0;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();
 
-    public Post(String title, String content, String imageName, Date createdAt, Date updatedAt, Integer likes, Integer dislikes, Set<Comment> comments) {
+    public Post(String title,
+                String body,
+                Date createdAt,
+                Date updatedAt,
+                Integer likes,
+                Integer dislikes,
+                Set<Comment> comments) {
         this.title = title;
-        this.content = content;
-        this.imageName = imageName;
+        this.body = body;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.likes = likes;

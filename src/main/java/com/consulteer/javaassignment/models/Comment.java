@@ -18,7 +18,9 @@ import java.util.Date;
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
     private Long id;
 
     @Column(length = 10000, nullable = false)
@@ -31,4 +33,11 @@ public class Comment {
     @JsonBackReference
     @ManyToOne
     private Post post;
+
+    public Comment(String content, Date createdAt, Date updatedAt, Post post) {
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.post = post;
+    }
 }

@@ -1,19 +1,16 @@
 package com.consulteer.javaassignment.services.impl;
 
-import com.consulteer.javaassignment.dto.CommentDTO;
 import com.consulteer.javaassignment.exceptions.ResourceNotFoundException;
 import com.consulteer.javaassignment.models.Comment;
 import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.repositories.CommentRepository;
 import com.consulteer.javaassignment.repositories.PostRepository;
 import com.consulteer.javaassignment.services.CommentService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -24,59 +21,51 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
-    public CommentDTO createComment(Comment comment, Long postId) {
+    public Comment createComment(Comment comment, Long postId) {
 
-        Post post = this.postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "post id", postId));
+        Post post = this.postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
         comment.setPost(post);
         comment.setCreatedAt(new Date());
-        Comment savedComment = this.commentRepository.save(comment);
-
-        return this.modelMapper.map(savedComment, CommentDTO.class);
+        comment.setUpdatedAt(new Date());
+        return this.commentRepository.save(comment);
     }
 
     @Override
-    public CommentDTO updateComment(Comment comment, Long commentId) {
+    public Comment updateComment(Comment comment, Long commentId) {
 
-        Comment updatedComment = this.commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment", " Id ", commentId));
+        Comment updatedComment = findCommentById(commentId);
 
-        updatedComment.setUpdatedAt(new Date());
         updatedComment.setContent(comment.getContent());
+        updatedComment.setUpdatedAt(new Date());
+        return this.commentRepository.save(updatedComment);
 
-        Comment savedComment = this.commentRepository.save(updatedComment);
-
-        return this.modelMapper.map(savedComment, CommentDTO.class);
     }
 
     @Override
-    public CommentDTO getCommentById(Long commentId){
+    public Collection<Comment> getAllComments() {
 
-        Comment comment = this.commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment", "post id", commentId));
-
-        return this.modelMapper.map(comment, CommentDTO.class);
+        return commentRepository.findAll().stream().toList();
     }
 
     @Override
-    public List<CommentDTO> getAllComments() {
+    public Comment getCommentById(Long commentId){
 
-        List<Comment> comments = this.commentRepository.findAll();
-        List<CommentDTO> commentDTOs = comments.stream()
-                .map(comment -> this.modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toList());
-
-        return commentDTOs;
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + commentId));
     }
 
     @Override
     public void deleteComment(Long commentId) {
-        Comment comment = this.commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment", " Id", commentId));
+        Comment comment = findCommentById(commentId);
 
-        this.commentRepository.delete(comment);
+        this.commentRepository.deleteById(comment.getId());
+    }
+
+    private Comment findCommentById(Long commentId) {
+        return this.commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
     }
 }
