@@ -29,7 +29,6 @@ class PostRepositoryTest {
                 id,
                 "Title",
                 "Content",
-                "default.png",
                 null,
                 null,
                 0,
@@ -39,7 +38,7 @@ class PostRepositoryTest {
 
         underTest.save(post);
         //when
-        Boolean expected = underTest.selectedPostExists(id);
+        Boolean expected = underTest.doesSelectedPostExist(id);
         //then
         assertThat(expected).isTrue();
     }
@@ -50,7 +49,7 @@ class PostRepositoryTest {
         //given
         Long id = 1L;
         //when
-        Boolean expected = underTest.selectedPostExists(id);
+        Boolean expected = underTest.doesSelectedPostExist(id);
         //then
         assertThat(expected).isFalse();
     }

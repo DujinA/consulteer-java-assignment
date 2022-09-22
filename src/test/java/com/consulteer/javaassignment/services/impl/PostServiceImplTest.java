@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -19,8 +18,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
 
-    @Mock
-    private ModelMapper modelMapper;
     @Mock
     private PostRepository postRepository;
 
@@ -33,7 +30,7 @@ class PostServiceImplTest {
     @BeforeEach
     void setUp() {
 
-        underTest = new PostServiceImpl(postRepository, modelMapper);
+        underTest = new PostServiceImpl(postRepository);
     }
 
     @Test
@@ -43,7 +40,6 @@ class PostServiceImplTest {
                 1L,
                 "Title",
                 "Content",
-                "default.png",
                 null,
                 null,
                 0,
@@ -69,7 +65,6 @@ class PostServiceImplTest {
                 1L,
                 "Title",
                 "Content",
-                "default.png",
                 null,
                 null,
                 0,
@@ -77,7 +72,7 @@ class PostServiceImplTest {
                 null
         );
 
-        given(postRepository.selectedPostExists(post.getId()))
+        given(postRepository.doesSelectedPostExist(post.getId()))
                 .willReturn(true);
 
         assertThatThrownBy(() -> underTest.createPost(post))

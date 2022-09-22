@@ -3,9 +3,11 @@ package com.consulteer.javaassignment.repositories;
 import com.consulteer.javaassignment.models.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("" +
@@ -13,5 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "TRUE ELSE FALSE END " +
             "FROM Post p " +
             "WHERE p.id = ?1")
-    Boolean selectedPostExists(Long id);
+    Boolean doesSelectedPostExist(Long id);
+
+    Optional<Post> findById(Long id);
 }

@@ -1,38 +1,50 @@
 package com.consulteer.javaassignment.controllers;
 
-import com.consulteer.javaassignment.dto.PostDTO;
 import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.payloads.ApiResponse;
 import com.consulteer.javaassignment.services.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/posts")
+@RequiredArgsConstructor
 public class PostController {
 
     @Autowired
     private PostService postService;
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@Valid @RequestBody Post post) {
+    public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
 
-        PostDTO createPostDTO = this.postService.createPost(post);
+        Post createPostDTO = this.postService.createPost(post);
 
         return new ResponseEntity<>(createPostDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody Post post, @PathVariable("postId") Long postId) {
+    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post, @PathVariable("postId") Long postId) {
 
-        PostDTO updatedPost = this.postService.updatePost(post, postId);
+        Post updatedPost = this.postService.updatePost(post, postId);
 
         return ResponseEntity.ok(updatedPost);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Collection<Post>> getAllPosts() {
+
+        return ResponseEntity.ok(this.postService.getAllPosts());
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post>  getPostById(@PathVariable Long postId) {
+        return ResponseEntity.ok(this.postService.getPostById(postId));
     }
 
     @DeleteMapping("/{postId}")
@@ -40,27 +52,16 @@ public class PostController {
 
         this.postService.deletePost(postId);
 
-        return new ResponseEntity(new ApiResponse("Post deleted successfully", true), HttpStatus.OK);
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<List<PostDTO>> getAllPosts() {
-
-        return ResponseEntity.ok(this.postService.getAllPosts());
-    }
-
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO>  getSinglePost(@PathVariable Long postId) {
-        return ResponseEntity.ok(this.postService.getPostById(postId));
+        return new ResponseEntity<>(new ApiResponse("Post deleted successfully", true), HttpStatus.OK);
     }
 
     @PutMapping("/{postId}/like")
-    public ResponseEntity<PostDTO> updateLikesOnPost(@PathVariable("postId") Long postId){
+    public ResponseEntity<Post> updateLikesOnPost(@PathVariable("postId") Long postId){
         return ResponseEntity.ok(this.postService.updateLikes(postId));
     }
 
     @PutMapping("/{postId}/dislike")
-    public ResponseEntity<PostDTO> updateDislikesOnPost(@PathVariable("postId") Long postId){
+    public ResponseEntity<Post> updateDislikesOnPost(@PathVariable("postId") Long postId){
         return ResponseEntity.ok(this.postService.updateDislikes(postId));
     }
 }
