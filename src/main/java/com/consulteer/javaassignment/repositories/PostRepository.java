@@ -9,13 +9,11 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-
     @Query("" +
             "SELECT CASE WHEN COUNT(p) > 0 THEN " +
             "TRUE ELSE FALSE END " +
             "FROM Post p " +
             "WHERE p.id = ?1")
     Boolean doesSelectedPostExist(Long id);
-
     Optional<Post> findById(Long id);
 }

@@ -1,6 +1,7 @@
 package com.consulteer.javaassignment.services.impl;
 
 import com.consulteer.javaassignment.exceptions.BadRequestException;
+import com.consulteer.javaassignment.mapper.PostMapper;
 import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,25 +18,21 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
-
     @Mock
     private PostRepository postRepository;
-
     @Mock
-    Post post;
-
+    private PostMapper postMapper;
     @InjectMocks
     private PostServiceImpl underTest;
 
     @BeforeEach
     void setUp() {
 
-        underTest = new PostServiceImpl(postRepository);
+        underTest = new PostServiceImpl(postRepository, postMapper);
     }
 
     @Test
     void canCreatePost() {
-
         // given
         Post post = new Post(
                 1L,
@@ -63,7 +60,6 @@ class PostServiceImplTest {
 
     @Test
     void willThrowIfPostIdIsTaken() {
-
         // given
         Post post = new Post(
                 1L,
@@ -79,8 +75,7 @@ class PostServiceImplTest {
         given(postRepository.doesSelectedPostExist(post.getId()))
                 .willReturn(true);
 
-        // when
-        // then
+        // when-then
         assertThatThrownBy(() -> underTest.createPost(post))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Id " + post.getId() + " already taken");
@@ -90,7 +85,6 @@ class PostServiceImplTest {
 
     @Test
     void canGetAllPosts() {
-
         underTest.getAllPosts();
 
         verify(postRepository).findAll();

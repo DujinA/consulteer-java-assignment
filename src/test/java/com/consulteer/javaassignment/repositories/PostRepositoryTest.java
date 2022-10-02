@@ -10,7 +10,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class PostRepositoryTest {
-
     @Autowired
     private PostRepository underTest;
 
@@ -21,7 +20,6 @@ class PostRepositoryTest {
 
     @Test
     void itShouldCheckIfPostAlreadyExists() {
-
         Long id = 1L;
 
         // given
@@ -47,7 +45,6 @@ class PostRepositoryTest {
 
     @Test
     void  itShouldCheckIfPostDoesNotExist() {
-
         // given
         Long id = 1L;
 

@@ -1,7 +1,9 @@
 package com.consulteer.javaassignment.services.impl;
 
+import com.consulteer.javaassignment.dto.PostDto;
 import com.consulteer.javaassignment.exceptions.BadRequestException;
 import com.consulteer.javaassignment.exceptions.ResourceNotFoundException;
+import com.consulteer.javaassignment.mapper.PostMapper;
 import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.repositories.PostRepository;
 import com.consulteer.javaassignment.services.PostService;
@@ -9,77 +11,89 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
-
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
+    @Autowired
+    private final PostMapper postMapper;
 
     @Override
-    public Post createPost(Post post){
-
+    public PostDto createPost(Post post){
         boolean postExists = postRepository.doesSelectedPostExist(post.getId());
 
         if (postExists) {
             throw new BadRequestException("Id " + post.getId() + " already taken");
         }
+        postRepository.save(post);
 
-        post.setCreatedAt(new Date());
-        post.setUpdatedAt(new Date());
-
-        return this.postRepository.save(post);
+        return postMapper.convert(post);
     }
 
     @Override
-    public Post updatePost(Post post, Long postId){
-
+    public PostDto updatePost(Post post, Long postId){
         Post updatedPost = findPostById(postId);
 
+        updateBasicFields(post, updatedPost);
+        postRepository.save(updatedPost);
+
+        return postMapper.convert(updatedPost);
+    }
+
+    private static void updateBasicFields(Post post, Post updatedPost) {
         updatedPost.setTitle(post.getTitle());
         updatedPost.setBody(post.getBody());
         updatedPost.setLikes(post.getLikes());
         updatedPost.setDislikes(post.getDislikes());
-        updatedPost.setUpdatedAt(new Date());
-
-        return this.postRepository.save(updatedPost);
-
     }
 
     @Override
-    public List<Post> getAllPosts(){
-        return postRepository.findAll();
+    public List<PostDto> getAllPosts(){
+        return postRepository.findAll().stream()
+                .map(postMapper::convert)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Post getPostById(Long postId){
+    public PostDto getPostById(Long postId){
+        Post post =  findPostById(postId);
+
+        return postMapper.convert(post);
+    }
+
+    @Override
+    public void deletePost(Long postId){
+        Post post = findPostById(postId);
+
+        postRepository.delete(post);
+    }
+
+    private Post findPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
     }
 
     @Override
-    public void deletePost(Long postId){
-
+    public PostDto updateLikes(Long postId) {
         Post post = findPostById(postId);
 
-        this.postRepository.deleteById(post.getId());
-    }
+        post.setLikes(post.getLikes() + 1);
+        postRepository.save(post);
 
-    private Post findPostById(Long postId) {
-        return this.postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
-    }
-
-    @Override
-    public Post updateLikes(Long postId) {
-        return null;
+        return postMapper.convert(post);
     }
 
     @Override
-    public Post updateDislikes(Long postId) {
-        return null;
+    public PostDto updateDislikes(Long postId) {
+        Post post = findPostById(postId);
+
+        post.setDislikes(post.getDislikes() + 1);
+        postRepository.save(post);
+
+        return postMapper.convert(post);
     }
 }

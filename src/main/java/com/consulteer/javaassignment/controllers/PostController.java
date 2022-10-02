@@ -1,5 +1,6 @@
 package com.consulteer.javaassignment.controllers;
 
+import com.consulteer.javaassignment.dto.PostDto;
 import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.payloads.ApiResponse;
 import com.consulteer.javaassignment.services.PostService;
@@ -16,54 +17,43 @@ import java.util.List;
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
-
     @Autowired
     private final PostService postService;
 
-
-
     @PostMapping("/")
-    public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
-
-        Post createPostDTO = this.postService.createPost(post);
-
-        return new ResponseEntity<>(createPostDTO, HttpStatus.CREATED);
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody Post post) {
+        return new ResponseEntity<>(postService.createPost(post), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post, @PathVariable("postId") Long postId) {
-
-        Post updatedPost = this.postService.updatePost(post, postId);
-
-        return ResponseEntity.ok(updatedPost);
+    @PutMapping("/{post-id}")
+    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody Post post, @PathVariable("post-id") Long postId) {
+        return ResponseEntity.ok(postService.updatePost(post, postId));
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Post>> getAllPosts() {
-
-        return ResponseEntity.ok(this.postService.getAllPosts());
+    public ResponseEntity<List<PostDto>> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPosts());
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<Post>  getPostById(@PathVariable Long postId) {
-        return ResponseEntity.ok(this.postService.getPostById(postId));
+    @GetMapping("/{post-id}")
+    public ResponseEntity<PostDto>  getPostById(@PathVariable("post-id") Long postId) {
+        return ResponseEntity.ok(postService.getPostById(postId));
     }
 
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable("postId") Long postId) {
-
-        this.postService.deletePost(postId);
+    @DeleteMapping("/{post-id}")
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable("post-id") Long postId) {
+        postService.deletePost(postId);
 
         return new ResponseEntity<>(new ApiResponse("Post deleted successfully", true), HttpStatus.OK);
     }
 
-    @PutMapping("/{postId}/like")
-    public ResponseEntity<Post> updateLikesOnPost(@PathVariable("postId") Long postId){
-        return ResponseEntity.ok(this.postService.updateLikes(postId));
+    @PutMapping("/{post-id}/like")
+    public ResponseEntity<PostDto> updateLikesOnPost(@PathVariable("post-id") Long postId){
+        return ResponseEntity.ok(postService.updateLikes(postId));
     }
 
-    @PutMapping("/{postId}/dislike")
-    public ResponseEntity<Post> updateDislikesOnPost(@PathVariable("postId") Long postId){
-        return ResponseEntity.ok(this.postService.updateDislikes(postId));
+    @PutMapping("/{post-id}/dislike")
+    public ResponseEntity<PostDto> updateDislikesOnPost(@PathVariable("post-id") Long postId){
+        return ResponseEntity.ok(postService.updateDislikes(postId));
     }
 }

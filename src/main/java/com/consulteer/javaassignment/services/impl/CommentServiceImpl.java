@@ -1,71 +1,79 @@
 package com.consulteer.javaassignment.services.impl;
 
+import com.consulteer.javaassignment.dto.CommentDto;
 import com.consulteer.javaassignment.exceptions.ResourceNotFoundException;
+import com.consulteer.javaassignment.mapper.CommentMapper;
 import com.consulteer.javaassignment.models.Comment;
 import com.consulteer.javaassignment.models.Post;
 import com.consulteer.javaassignment.repositories.CommentRepository;
 import com.consulteer.javaassignment.repositories.PostRepository;
 import com.consulteer.javaassignment.services.CommentService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
-
     @Autowired
-    private CommentRepository commentRepository;
-
+    private final CommentRepository commentRepository;
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
+    @Autowired
+    private final CommentMapper commentMapper;
 
     @Override
-    public Comment createComment(Comment comment, Long postId) {
-
+    public CommentDto createComment(Comment comment, Long postId) {
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
         comment.setPost(post);
-        comment.setCreatedAt(new Date());
-        comment.setUpdatedAt(new Date());
-        return this.commentRepository.save(comment);
+        commentRepository.save(comment);
+
+        return commentMapper.convert(comment);
     }
 
     @Override
-    public Comment updateComment(Comment comment, Long commentId) {
-
+    public CommentDto updateComment(Comment comment, Long commentId) {
         Comment updatedComment = findCommentById(commentId);
 
+        updateBasicFields(comment, updatedComment);
+        commentRepository.save(updatedComment);
+
+        return commentMapper.convert(updatedComment);
+    }
+
+    private static void updateBasicFields(Comment comment, Comment updatedComment) {
         updatedComment.setContent(comment.getContent());
-        updatedComment.setUpdatedAt(new Date());
-        return this.commentRepository.save(updatedComment);
-
+        updatedComment.setUpdatedAt(comment.getUpdatedAt());
     }
 
     @Override
-    public Collection<Comment> getAllComments() {
-
-        return commentRepository.findAll().stream().toList();
+    public List<CommentDto> getAllComments() {
+        return commentRepository.findAll().stream()
+                .map(commentMapper::convert)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Comment getCommentById(Long commentId){
+    public CommentDto getCommentById(Long commentId){
+        Comment comment = findCommentById(commentId);
 
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + commentId));
+        return commentMapper.convert(comment);
     }
 
     @Override
     public void deleteComment(Long commentId) {
         Comment comment = findCommentById(commentId);
 
-        this.commentRepository.deleteById(comment.getId());
+        commentRepository.deleteById(comment.getId());
     }
 
     private Comment findCommentById(Long commentId) {
-        return this.commentRepository.findById(commentId)
+        return commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
     }
 }
