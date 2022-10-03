@@ -36,7 +36,7 @@ public class PostController {
     }
 
     @GetMapping("/{post-id}")
-    public ResponseEntity<PostDto>  getPostById(@PathVariable("post-id") Long postId) {
+    public ResponseEntity<PostDto> getPostById(@PathVariable("post-id") Long postId) {
         return ResponseEntity.ok(postService.getPostById(postId));
     }
 
@@ -48,12 +48,12 @@ public class PostController {
     }
 
     @PutMapping("/{post-id}/like")
-    public ResponseEntity<PostDto> updateLikesOnPost(@PathVariable("post-id") Long postId){
+    public ResponseEntity<PostDto> updateLikesOnPost(@PathVariable("post-id") Long postId) {
         return ResponseEntity.ok(postService.updateLikes(postId));
     }
 
     @PutMapping("/{post-id}/dislike")
-    public ResponseEntity<PostDto> updateDislikesOnPost(@PathVariable("post-id") Long postId){
+    public ResponseEntity<PostDto> updateDislikesOnPost(@PathVariable("post-id") Long postId) {
         return ResponseEntity.ok(postService.updateDislikes(postId));
     }
 }

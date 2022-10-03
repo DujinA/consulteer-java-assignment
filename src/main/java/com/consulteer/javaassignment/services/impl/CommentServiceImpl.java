@@ -59,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getCommentById(Long commentId){
+    public CommentDto getCommentById(Long commentId) {
         Comment comment = findCommentById(commentId);
 
         return commentMapper.convert(comment);

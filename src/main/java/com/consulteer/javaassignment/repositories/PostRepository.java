@@ -15,5 +15,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "FROM Post p " +
             "WHERE p.id = ?1")
     Boolean doesSelectedPostExist(Long id);
+
     Optional<Post> findById(Long id);
 }

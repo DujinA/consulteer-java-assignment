@@ -44,7 +44,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void  itShouldCheckIfPostDoesNotExist() {
+    void itShouldCheckIfPostDoesNotExist() {
         // given
         Long id = 1L;
 
