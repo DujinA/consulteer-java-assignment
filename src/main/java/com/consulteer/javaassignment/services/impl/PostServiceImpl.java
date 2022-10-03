@@ -23,7 +23,8 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     @Override
-    public PostDto createPost(Post post){
+    public PostDto createPost(PostDto postDto){
+        Post post = postMapper.convertCreatedPost(postDto);
         boolean postExists = postRepository.doesSelectedPostExist(post.getId());
 
         if (postExists) {
@@ -35,20 +36,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto updatePost(Post post, Long postId){
+    public PostDto updatePost(PostDto postDto, Long postId){
+
         Post updatedPost = findPostById(postId);
 
-        updateBasicFields(post, updatedPost);
+        updateBasicFields(postDto, updatedPost);
         postRepository.save(updatedPost);
 
         return postMapper.convert(updatedPost);
     }
 
-    private static void updateBasicFields(Post post, Post updatedPost) {
-        updatedPost.setTitle(post.getTitle());
-        updatedPost.setBody(post.getBody());
-        updatedPost.setLikes(post.getLikes());
-        updatedPost.setDislikes(post.getDislikes());
+    private static void updateBasicFields(PostDto postDto, Post updatedPost) {
+        updatedPost.setTitle(postDto.getTitle());
+        updatedPost.setBody(postDto.getBody());
     }
 
     @Override
@@ -68,7 +68,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(Long postId){
         Post post = findPostById(postId);
-
         postRepository.delete(post);
     }
 

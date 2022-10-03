@@ -21,13 +21,13 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/")
-    public ResponseEntity<PostDto> createPost(@Valid @RequestBody Post post) {
-        return new ResponseEntity<>(postService.createPost(post), HttpStatus.CREATED);
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
+        return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{post-id}")
-    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody Post post, @PathVariable("post-id") Long postId) {
-        return ResponseEntity.ok(postService.updatePost(post, postId));
+    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable("post-id") Long postId) {
+        return ResponseEntity.ok(postService.updatePost(postDto, postId));
     }
 
     @GetMapping("/")

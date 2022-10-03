@@ -33,9 +33,9 @@ public class Post {
     @UpdateTimestamp
     private Date updatedAt;
     @Column(nullable = false)
-    private Integer likes = 0;
+    private Integer likes;
     @Column(nullable = false)
-    private Integer dislikes = 0;
+    private Integer dislikes;
     @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();

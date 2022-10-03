@@ -27,4 +27,13 @@ public class PostMapper{
                 postDto.getLikes(),
                 postDto.getDislikes());
     }
+
+    public Post convertCreatedPost(PostDto postDto) {
+        return new Post(postDto.getTitle(),
+                postDto.getBody(),
+                postDto.getCreatedAt(),
+                postDto.getUpdatedAt(),
+                0,
+                0);
+    }
 }

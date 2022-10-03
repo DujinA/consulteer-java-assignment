@@ -1,5 +1,6 @@
 package com.consulteer.javaassignment.services.impl;
 
+import com.consulteer.javaassignment.dto.PostDto;
 import com.consulteer.javaassignment.exceptions.BadRequestException;
 import com.consulteer.javaassignment.mapper.PostMapper;
 import com.consulteer.javaassignment.models.Post;
@@ -22,6 +23,10 @@ class PostServiceImplTest {
     private PostRepository postRepository;
     @Mock
     private PostMapper postMapper;
+    @Mock
+    private Post post = new Post(1L, "title", "body", null, null, 0, 0, null);
+    @Mock
+    private PostDto postDto = new PostDto("title", "body", null, null, 0, 0);
     @InjectMocks
     private PostServiceImpl underTest;
 
@@ -34,19 +39,11 @@ class PostServiceImplTest {
     @Test
     void canCreatePost() {
         // given
-        Post post = new Post(
-                1L,
-                "Title",
-                "Content",
-                null,
-                null,
-                0,
-                0,
-                null
-        );
+        when(postMapper.convertCreatedPost(postDto)).thenReturn(post);
+        when(postMapper.convert(post)).thenReturn(postDto);
 
         // when
-        underTest.createPost(post);
+        underTest.createPost(postDto);
 
         // then
         ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class);
@@ -61,22 +58,16 @@ class PostServiceImplTest {
     @Test
     void willThrowIfPostIdIsTaken() {
         // given
-        Post post = new Post(
-                1L,
-                "Title",
-                "Content",
-                null,
-                null,
-                0,
-                0,
-                null
-        );
+        when(postMapper.convertCreatedPost(postDto)).thenReturn(post);
+        when(postMapper.convert(post)).thenReturn(postDto);
+
+        PostDto postDto = postMapper.convert(post);
 
         given(postRepository.doesSelectedPostExist(post.getId()))
                 .willReturn(true);
 
         // when-then
-        assertThatThrownBy(() -> underTest.createPost(post))
+        assertThatThrownBy(() -> underTest.createPost(postDto))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Id " + post.getId() + " already taken");
 

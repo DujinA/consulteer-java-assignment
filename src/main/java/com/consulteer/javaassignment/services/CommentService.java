@@ -6,9 +6,9 @@ import com.consulteer.javaassignment.models.Comment;
 import java.util.List;
 
 public interface CommentService {
-    CommentDto createComment(Comment comment, Long postId);
+    CommentDto createComment(CommentDto commentDto, Long postId);
 
-    CommentDto updateComment(Comment comment, Long commentId);
+    CommentDto updateComment(CommentDto commentDto, Long commentId);
 
     CommentDto getCommentById(Long CommentId);
 

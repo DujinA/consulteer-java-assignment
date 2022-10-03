@@ -26,9 +26,10 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
 
     @Override
-    public CommentDto createComment(Comment comment, Long postId) {
+    public CommentDto createComment(CommentDto commentDto, Long postId) {
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+        Comment comment = commentMapper.convert(commentDto);
 
         comment.setPost(post);
         commentRepository.save(comment);
@@ -37,18 +38,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto updateComment(Comment comment, Long commentId) {
+    public CommentDto updateComment(CommentDto commentDto, Long commentId) {
         Comment updatedComment = findCommentById(commentId);
 
-        updateBasicFields(comment, updatedComment);
+        updateBasicFields(commentDto, updatedComment);
         commentRepository.save(updatedComment);
 
         return commentMapper.convert(updatedComment);
     }
 
-    private static void updateBasicFields(Comment comment, Comment updatedComment) {
-        updatedComment.setContent(comment.getContent());
-        updatedComment.setUpdatedAt(comment.getUpdatedAt());
+    private static void updateBasicFields(CommentDto commentDto, Comment updatedComment) {
+        updatedComment.setContent(commentDto.getContent());
+        updatedComment.setUpdatedAt(commentDto.getUpdatedAt());
     }
 
     @Override

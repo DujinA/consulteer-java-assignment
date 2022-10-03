@@ -21,13 +21,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/posts/{post-id}/comments")
-    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody Comment comment, @PathVariable("post-id") Long postId) {
-        return new ResponseEntity<>(commentService.createComment(comment, postId), HttpStatus.CREATED);
+    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto commentDto, @PathVariable("post-id") Long postId) {
+        return new ResponseEntity<>(commentService.createComment(commentDto, postId), HttpStatus.CREATED);
     }
 
     @PutMapping("/comments/{comment-id}")
-    public ResponseEntity<CommentDto> updateComment(@Valid @RequestBody Comment comment, @PathVariable("comment-id") Long commentId) {
-        return ResponseEntity.ok(commentService.updateComment(comment, commentId));
+    public ResponseEntity<CommentDto> updateComment(@Valid @RequestBody CommentDto commentDto, @PathVariable("comment-id") Long commentId) {
+        return ResponseEntity.ok(commentService.updateComment(commentDto, commentId));
     }
 
     @GetMapping("/comments")

@@ -1,14 +1,13 @@
 package com.consulteer.javaassignment.services;
 
 import com.consulteer.javaassignment.dto.PostDto;
-import com.consulteer.javaassignment.models.Post;
 
 import java.util.List;
 
 public interface PostService {
-    PostDto createPost(Post post);
+    PostDto createPost(PostDto postDto);
 
-    PostDto updatePost(Post post, Long postId);
+    PostDto updatePost(PostDto postDto, Long postId);
 
     List<PostDto> getAllPosts();
 
